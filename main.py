@@ -25,3 +25,4 @@ if __name__ == "__main__":
     create_user(email="suyash@suyashkumar.com", age=24, heart_rate=60) # we should only do this once, otherwise will overwrite existing user
     add_heart_rate("suyash@suyashkumar.com", 60, datetime.datetime.now())
     print_user("suyash@suyashkumar.com")
+    print_user("someone@something.com")
