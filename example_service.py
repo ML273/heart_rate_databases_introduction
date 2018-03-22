@@ -1,3 +1,6 @@
+from pymodm import connect
+connect("mongodb://vcm-3502.vm.duke.edu:27017/heart_rate_app")
+
 from flask import Flask, jsonify, request
 app = Flask(__name__)
 from main import add_heart_rate, create_user, print_user
@@ -7,20 +10,23 @@ import datetime
 @app.route("/api/heart_rate", methods=["POST"])
 def store_heart_rate():
     user = request.get_json()
-    # maybe add line that checks if user is created already, and if so, just add heart rate instead
-    # of create
-    # if user is new:
-        create_user(user["user_email"], user["user_age"], user["heart_rate"])
-    #else:
+    try:  # attempt to add info. If user does not exist, except will create user
         add_heart_rate(user["user_email"], user["heart_rate"], datetime.datetime.now())
+    except:
+        create_user(user["user_email"], user["user_age"], user["heart_rate"])
 
 @app.route("/api/heart_rate/<user_email>", methods=["GET"])
-#def all_measurements(user_email):
-print_user(user_email)
+def all_measurements(user_email):
+    #can check user_email input type (string?)
+    try:
+        return print_user(user_email)
+    except:
+        print("Must give a valid user email!")
 
 @app.route("/api/heart_rate/average/<user_email>", methods=["GET"])
 # get average over all heart rates
 def get_complete_average(user_email):
+    
     #left off here. need to figure out how to get every number after searching for the user
 
 @app.route("/api/heart_rate/interval_average", methods=["POST"])
@@ -29,20 +35,7 @@ r = request.get_json()
 #get the interval specified. maybe if case to make sure everything stays within
 
 
-
 #end edit
-
-
-@app.route("/", methods=["GET"])
-def hi():
-    return "Hello, world"
-
-@app.route("/name", methods=["GET"])
-def getname():
-    name = {
-        "name": "Marianne Lee"
-    }
-    return jsonify(name)
 
 @app.route("/hello/<name>", methods=["GET"])
 def hello(name):
