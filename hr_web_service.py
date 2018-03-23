@@ -1,24 +1,40 @@
 from database_webserver_functions import add_heart_rate, create_user, \
         print_user, avg_total_hr, interval_hr
+import datetime
 from pymodm import connect
 from flask import Flask, jsonify, request
 app = Flask(__name__)
-import datetime
 connect("mongodb://vcm-3502.vm.duke.edu:27017/heart_rate_app")
+
 
 @app.route("/api/heart_rate", methods=["POST"])
 def store_heart_rate():
     user = request.get_json()
-    ########EDIT######## check json format is okay
-    try:  # attempt to add info. If user does not exist, except will create user
-        add_heart_rate(user["user_email"], user["heart_rate"], datetime.datetime.now())
+    try:
+        email = user["user_email"]
+        age = user["user_age"]
+        rate = user["heart_rate"]
+    except ValueError:
+        print("Please provide the correct json format!")
+    try:
+        isinstance(email, str)
+    except TypeError:
+        print("Please provide a valid email!")
+    try:
+        isinstance(age, float)
+        isinstance(rate, float)
+    except TypeError:
+        print("Please provide valid age and heart rate!")
+
+    try:
+        # attempt to add info. If user does not exist, except will create user
+        add_heart_rate(email, rate, datetime.datetime.now())
     except:
-        create_user(user["user_email"], user["user_age"], user["heart_rate"])
+        create_user(email, age, rate)
 
 
 @app.route("/api/heart_rate/<user_email>", methods=["GET"])
 def all_measurements(user_email):
-    #can check user_email input type (string?)
     try:
         return print_user(user_email)
     except:
@@ -35,5 +51,17 @@ def get_complete_average(user_email):
 @app.route("/api/heart_rate/interval_average", methods=["POST"])
 def interval_avg():
     r = request.get_json()
-    #####EDIT###### check this json format is okay (appropriate fields)
-    return print(interval_hr(r["user_email"], r["heart_rate_average_since"]))
+    try:
+        email = r["user_email"]
+        inter = r["heart_rate_average_since"]
+    except ValueError:
+        print("Please provide the correct json format!")
+    try:
+        isinstance(email, str)
+    except TypeError:
+        print("Please provide a valid email!")
+    try:
+        isinstance(inter, type(datetime.datetime.now()))
+    except TypeError:
+        print("Please provide proper format for time!")
+    return print(interval_hr(email, inter))
