@@ -1,6 +1,7 @@
 from pymodm import connect
 import models
 import datetime
+import time
 from database_webserver_functions import add_heart_rate, create_user, print_user, avg_total_hr, interval_hr, check_valid_user
 
 def test_exceptions():
@@ -19,16 +20,40 @@ def test_add_heart_rate():
     assert updated_test.heart_rate[1] == 56 and updated_test.age == 22
 
 def test_create_user():
-    pass
-
-def test_print_user():
-    pass
+    connect("mongodb://vcm-3502.vm.duke.edu:27017/heart_rate_app")
+    email = "ml@duke.edu"
+    create_user(email, 22, 66)
+    test_user = models.User.objects.raw({"_id": email}).first()
+    assert test_user.heart_rate[0] == 66 and test_user.age == 22
 
 def test_avg_total_hr():
-    pass
+    connect("mongodb://vcm-3502.vm.duke.edu:27017/heart_rate_app")
+    email = "ml273@duke.edu"
+    rates = [45, 65, 34, 68]
+    for rate in rates:
+        add_heart_rate(email, rate, datetime.datetime.now())
+    # Should be [66, 56, 45, 65, 34, 68] now if including previous test
+    assert abs(avg_total_hr(email) - 55.67) < 0.1
 
 def test_interval_hr():
-    pass
+    connect("mongodb://vcm-3502.vm.duke.edu:27017/heart_rate_app")
+    email = "example@duke.edu"
+    now = datetime.datetime.now()
+    test_user = models.User(email, 22, 66, now)
+    time.sleep(0.500)
+    then = datetime.datetime.now()
+    add_heart_rate(email, 78, then)
+    assert interval_hr(email, now) == 72
 
-def check_valid_user():
-    pass
+def test_interval_hr_invalid():
+    connect("mongodb://vcm-3502.vm.duke.edu:27017/heart_rate_app")
+    email = "example2@duke.edu"
+    now = datetime.datetime.now()
+    test_user = models.User(email, 22, 66, now)
+    time.sleep(0.500)
+    then = datetime.datetime.now()
+    time.sleep(0.500)
+    future = datetime.datetime.now()
+    add_heart_rate(email, 78, then)
+    message = "Given date is in the future. Please give a reasonable input."
+    assert interval_hr(email, future) == message
