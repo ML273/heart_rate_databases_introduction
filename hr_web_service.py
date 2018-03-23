@@ -3,8 +3,8 @@ from database_webserver_functions import add_heart_rate, create_user, \
 import datetime
 from pymodm import connect
 from flask import Flask, jsonify, request
-app = Flask(__name__)
 connect("mongodb://vcm-3502.vm.duke.edu:27017/heart_rate_app")
+app = Flask(__name__)
 
 
 @app.route("/api/heart_rate", methods=["POST"])

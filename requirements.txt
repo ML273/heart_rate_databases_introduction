@@ -1,2 +1,8 @@
 pymodm
 flask
+pytest
+requests
+pytest-cov
+pytest-pep8
+datetime
+time
