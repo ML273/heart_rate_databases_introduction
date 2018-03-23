@@ -5,7 +5,14 @@ import time
 from database_webserver_functions import add_heart_rate, create_user, print_user, avg_total_hr, interval_hr, check_valid_user
 
 def test_exceptions():
-    pass
+    import pytest
+    import math
+    with pytest.raises(ImportError, message="Expecting ImportError"):
+        import blah
+    with pytest.raises(TypeError, message="Expecting TypeError"):
+        test = 5 + 'h'
+    with pytest.raises(ValueError, message="Expecting ValueError"):
+        test = math.sqrt(-1)
 
 def test_add_heart_rate():
     connect("mongodb://vcm-3502.vm.duke.edu:27017/heart_rate_app")
