@@ -1,9 +1,7 @@
 from pymodm import connect
-connect("mongodb://vcm-3502.vm.duke.edu:27017/heart_rate_app")
-
 from flask import Flask, jsonify, request
 app = Flask(__name__)
-from database_webserver_interface import add_heart_rate, create_user, print_user, avg_total_hr
+from database_webserver_functions import add_heart_rate, create_user, print_user, avg_total_hr, interval_hr
 import datetime
 
 @app.route("/api/heart_rate", methods=["POST"])
