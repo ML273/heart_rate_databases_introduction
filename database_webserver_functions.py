@@ -1,10 +1,9 @@
 from pymodm import connect
 import models
 import datetime
-
+connect("mongodb://vcm-3502.vm.duke.edu:27017/heart_rate_app")
 
 def add_heart_rate(email, heart_rate, time):
-    connect("mongodb://vcm-3502.vm.duke.edu:27017/heart_rate_app")
     check_valid_user(email)
     user = models.User.objects.raw({"_id": email}).first()
     # Get the first user where _id=email
@@ -16,7 +15,6 @@ def add_heart_rate(email, heart_rate, time):
 
 
 def create_user(email, age, heart_rate):
-    connect("mongodb://vcm-3502.vm.duke.edu:27017/heart_rate_app")
     u = models.User(email, age, [], [])  # create a new User instance
     u.heart_rate.append(heart_rate)  # add initial heart rate
     u.heart_rate_times.append(datetime.datetime.now())
@@ -25,7 +23,6 @@ def create_user(email, age, heart_rate):
 
 
 def print_user(email):
-    connect("mongodb://vcm-3502.vm.duke.edu:27017/heart_rate_app")
     user = models.User.objects.raw({"_id": email}).first()
     # Get the first user where _id=email
     print(user.email)
@@ -34,7 +31,6 @@ def print_user(email):
 
 
 def avg_total_hr(email):
-    connect("mongodb://vcm-3502.vm.duke.edu:27017/heart_rate_app")
     check_valid_user(email)
     user = models.User.objects.raw({"_id": email}).first()
     n = len(user.heart_rate)
@@ -43,7 +39,6 @@ def avg_total_hr(email):
 
 
 def interval_hr(email, date):
-    connect("mongodb://vcm-3502.vm.duke.edu:27017/heart_rate_app")
     check_valid_user(email)
     user = models.User.objects.raw({"_id": email}).first()
     dates = user.heart_rate_times
