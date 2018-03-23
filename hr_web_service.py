@@ -4,6 +4,7 @@ app = Flask(__name__)
 from database_webserver_functions import add_heart_rate, create_user, print_user, avg_total_hr, interval_hr
 import datetime
 
+
 @app.route("/api/heart_rate", methods=["POST"])
 def store_heart_rate():
     user = request.get_json()
@@ -13,6 +14,7 @@ def store_heart_rate():
     except:
         create_user(user["user_email"], user["user_age"], user["heart_rate"])
 
+
 @app.route("/api/heart_rate/<user_email>", methods=["GET"])
 def all_measurements(user_email):
     #can check user_email input type (string?)
@@ -21,11 +23,13 @@ def all_measurements(user_email):
     except:
         print("Must give a valid user email!")
 
+
 @app.route("/api/heart_rate/average/<user_email>", methods=["GET"])
 # get average over all heart rates
 def get_complete_average(user_email):
     average = avg_total_hr(user_email)
     return print(average)
+
 
 @app.route("/api/heart_rate/interval_average", methods=["POST"])
 def interval_avg():
