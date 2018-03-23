@@ -41,16 +41,19 @@ def interval_hr(email, date):
     n = len(dates)
     ind = dates.index(min(dates, key=lambda d: abs(d - date)))
     found_date = dates[ind]
-    if ind == n-1 and (date - found_date).total_seconds() > 0:
+    if ind == n - 1 and (date - found_date).total_seconds() > 0:
         return "Given date is in the future. Please give a reasonable input."
     elif ind == 0 and (date - found_date).total_seconds() < 0:
         return avg_total_hr(email)
-    elif (date - found_date).total_seconds() > 0:
+    elif (date - found_date).total_seconds() > 0.01:
         ind += 1
-        result = sum(rates[ind:])/n
+        m = n - ind
+        result = sum(rates[ind:])/m
+        print((date-found_date).total_seconds())
         return result
     else:
-        result = sum(rates[ind:])/n
+        m = n - ind
+        result = sum(rates[ind:])/m
         return result
 
 def check_valid_user(email):
@@ -58,10 +61,3 @@ def check_valid_user(email):
         user = models.User.objects.raw({"_id": email}).first()
     except:
         print("User email is not in database! Check for typos or create new user!")
-
-#if __name__ == "__main__":
-#    connect("mongodb://vcm-3502.vm.duke.edu:27017/heart_rate_app") # open up connection to db
-#    create_user(email="suyash@suyashkumar.com", age=24, heart_rate=60) # we should only do this once, otherwise will overwrite existing user
-#    add_heart_rate("suyash@suyashkumar.com", 60, datetime.datetime.now())
-#    print_user("suyash@suyashkumar.com")
-#    print_user("someone@something.com")
