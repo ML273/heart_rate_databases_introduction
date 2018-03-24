@@ -1,7 +1,6 @@
 from pymodm import connect
 import models
 import datetime
-from dateutil import parser
 connect("mongodb://vcm-3502.vm.duke.edu:27017/heart_rate_app")
 
 
