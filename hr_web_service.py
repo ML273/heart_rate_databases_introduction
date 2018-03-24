@@ -43,7 +43,7 @@ def store_heart_rate():
 def all_measurements(user_email):
     try:
         info = print_user(user_email)
-        return info
+        return jsonify(info)
     except:
         return "Must give a valid user email!"
 

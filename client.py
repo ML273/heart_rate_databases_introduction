@@ -12,7 +12,8 @@ create_user = requests.post("http://vcm-3502.vm.duke.edu:5000/api/heart_rate",\
 print(create_user.text)
 
 info = requests.get("http://vcm-3502.vm.duke.edu:5000/api/heart_rate/ml273@duke.edu")
-print(info.text)
+print(info.json())
+
 avg = requests.get("http://vcm-3502.vm.duke.edu:5000/api/heart_rate/average/ml273@duke.edu")
 print(avg.text)
 now = time2str(datetime.datetime.now())
