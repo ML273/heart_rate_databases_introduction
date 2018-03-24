@@ -7,6 +7,12 @@ connect("mongodb://vcm-3502.vm.duke.edu:27017/heart_rate_app")
 
 
 def add_heart_rate(email, heart_rate, time):
+    """Function that adds heart rate data to database
+
+    :param email: string that defines user email
+    :param heart_rate: int or float that defines heart rate
+    :param time: datetime object that defines time
+    """
     check_valid_user(email)
     user = models.User.objects.raw({"_id": email}).first()
     # Get the first user where _id=email
@@ -18,6 +24,12 @@ def add_heart_rate(email, heart_rate, time):
 
 
 def create_user(email, age, heart_rate):
+    """Function that creates new user
+
+    :param email: string that defines user email
+    :param age: float or int that defines user age
+    :param heart_rate: float or int that defines user heart rate
+    """
     u = models.User(email, age, [], [])  # create a new User instance
     u.heart_rate.append(heart_rate)  # add initial heart rate
     u.heart_rate_times.append(datetime.datetime.now())
@@ -26,6 +38,10 @@ def create_user(email, age, heart_rate):
 
 
 def print_user(email):
+    """Function that provides all user information given email
+
+    :param email: string that defines user email
+    """
     user = models.User.objects.raw({"_id": email}).first()
     # Get the first user where _id=email
     times = user.heart_rate_times
@@ -39,6 +55,10 @@ def print_user(email):
 
 
 def avg_total_hr(email):
+    """Function that averages all heart rates
+
+    :param email: string that defines user email
+    """
     check_valid_user(email)
     user = models.User.objects.raw({"_id": email}).first()
     n = len(user.heart_rate)
@@ -47,6 +67,11 @@ def avg_total_hr(email):
 
 
 def interval_hr(email, date):
+    """Function that averages all heart rates within an interval
+ 
+    :param email: string that defines user email
+    :param date: string that defines time
+    """
     check_valid_user(email)
     user = models.User.objects.raw({"_id": email}).first()
     date = str2time(date)
@@ -72,6 +97,10 @@ def interval_hr(email, date):
 
 
 def check_valid_user(email):
+    """Function that checks for user existence in database
+
+    :param email: string that defines user email
+    """
     try:
         user = models.User.objects.raw({"_id": email}).first()
     except:

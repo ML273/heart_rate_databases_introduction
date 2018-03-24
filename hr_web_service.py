@@ -9,11 +9,18 @@ connect("mongodb://vcm-3502.vm.duke.edu:27017/heart_rate_app")
 
 @app.route("/", methods=["GET"])
 def hello():
+    """ Function that greets the user on the main page!
+    """
     return "Hello, there!"
 
 
 @app.route("/api/heart_rate", methods=["POST"])
 def store_heart_rate():
+    """Function that takes in a json and creates or adds data to a user.
+
+    :raises ValueError: Error raised for incorrect json format
+    :raises TypeError: Error raised if values provided are incorrect type
+    """
     user = request.get_json()
     try:
         email = user["user_email"]
@@ -42,6 +49,8 @@ def store_heart_rate():
 
 @app.route("/api/heart_rate/<user_email>", methods=["GET"])
 def all_measurements(user_email):
+    """Function that prints the entire record of a user, given email.
+    """
     try:
         info = print_user(user_email)
         return jsonify(info)
@@ -52,6 +61,8 @@ def all_measurements(user_email):
 @app.route("/api/heart_rate/average/<user_email>", methods=["GET"])
 # get average over all heart rates
 def get_complete_average(user_email):
+    """Function that calculates the average of all heart rates
+    """
     average = avg_total_hr(user_email)
     text = "The average is {}.".format(average)
     return text
@@ -59,6 +70,11 @@ def get_complete_average(user_email):
 
 @app.route("/api/heart_rate/interval_average", methods=["POST"])
 def interval_avg():
+    """Function that calculates the average heart rate from an interval.
+
+    :raises ValueError: Error raised if incorrect json format
+    :raises TypeError: Error raised if inputs are of incorrect type
+    """
     r = request.get_json()
     try:
         email = r["user_email"]
