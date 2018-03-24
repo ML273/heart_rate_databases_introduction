@@ -1,11 +1,15 @@
+from flask import Flask, jsonify, request
+app = Flask(__name__)
 from database_webserver_functions import add_heart_rate, create_user, \
         print_user, avg_total_hr, interval_hr
 import datetime
 from pymodm import connect
-from flask import Flask, jsonify, request
 connect("mongodb://vcm-3502.vm.duke.edu:27017/heart_rate_app")
-app = Flask(__name__)
 
+
+@app.route("/", methods=["GET"])
+def hello():
+    return "hello, there"
 
 @app.route("/api/heart_rate", methods=["POST"])
 def store_heart_rate():
@@ -29,23 +33,27 @@ def store_heart_rate():
     try:
         # attempt to add info. If user does not exist, except will create user
         add_heart_rate(email, rate, datetime.datetime.now())
+        return "Added heart rate to existing user!"
     except:
         create_user(email, age, rate)
+        return "Created new user!"
 
 
 @app.route("/api/heart_rate/<user_email>", methods=["GET"])
 def all_measurements(user_email):
     try:
-        return print_user(user_email)
+        info = print_user(user_email)
+        return info
     except:
-        print("Must give a valid user email!")
+        return "Must give a valid user email!"
 
 
 @app.route("/api/heart_rate/average/<user_email>", methods=["GET"])
 # get average over all heart rates
 def get_complete_average(user_email):
     average = avg_total_hr(user_email)
-    return print(average)
+    text = "The average is {}.".format(average)
+    return text
 
 
 @app.route("/api/heart_rate/interval_average", methods=["POST"])
@@ -64,4 +72,4 @@ def interval_avg():
         isinstance(inter, type(datetime.datetime.now()))
     except TypeError:
         print("Please provide proper format for time!")
-    return print(interval_hr(email, inter))
+    return interval_hr(email, inter)
