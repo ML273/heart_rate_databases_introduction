@@ -1,7 +1,8 @@
 from pymodm import connect
 import models
 import datetime
-from dateutil import parser
+from time_convert import time2str, str2time
+
 connect("mongodb://vcm-3502.vm.duke.edu:27017/heart_rate_app")
 
 
@@ -43,8 +44,7 @@ def avg_total_hr(email):
 def interval_hr(email, date):
     check_valid_user(email)
     user = models.User.objects.raw({"_id": email}).first()
-    ####EDIT# maybe problem line
-    date = parser.parse(date)
+    date = str2time(date)
     dates = user.heart_rate_times
     rates = user.heart_rate
     n = len(dates)
