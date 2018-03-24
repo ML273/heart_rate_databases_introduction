@@ -1,7 +1,7 @@
 from pymodm import connect
 import models
-import datetime
 import time
+import datetime
 from database_webserver_functions import add_heart_rate, create_user, \
         print_user, avg_total_hr, interval_hr, check_valid_user
 
