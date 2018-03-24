@@ -1,6 +1,8 @@
 from pymodm import connect
 import models
 import datetime
+from time_convert import time2str, str2time
+
 connect("mongodb://vcm-3502.vm.duke.edu:27017/heart_rate_app")
 
 
@@ -26,8 +28,13 @@ def create_user(email, age, heart_rate):
 def print_user(email):
     user = models.User.objects.raw({"_id": email}).first()
     # Get the first user where _id=email
-    res = {"email": user.email, "heart_rate": user.heart_rate, "heart_rate_times":
-           user.heart_rate_times}
+    times = user.heart_rate_times
+    strings = [[] for k in range(len(times))]
+    for i, time in enumerate(times):
+        strings[i] = time2str(time)
+    res = {"email": user.email,
+           "heart_rate": user.heart_rate,
+           "heart_rate_times": strings}
     return res
 
 
@@ -42,8 +49,7 @@ def avg_total_hr(email):
 def interval_hr(email, date):
     check_valid_user(email)
     user = models.User.objects.raw({"_id": email}).first()
-    ####EDIT# maybe problem line
-    date = parser.parse(date)
+    date = str2time(date)
     dates = user.heart_rate_times
     rates = user.heart_rate
     n = len(dates)

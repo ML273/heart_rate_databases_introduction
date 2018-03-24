@@ -1,7 +1,9 @@
 from pymodm import connect
 import models
 import time
+from time_convert import str2time, time2str
 import datetime
+
 from database_webserver_functions import add_heart_rate, create_user, \
         print_user, avg_total_hr, interval_hr, check_valid_user
 
@@ -58,8 +60,7 @@ def test_interval_hr():
     time.sleep(0.500)
     then = datetime.datetime.now()
     add_heart_rate(email, 78, then)
-    ###EDIT
-    assert interval_hr(email, str(now)) == 72
+    assert interval_hr(email, time2str(now)) == 72
 
 
 def test_interval_hr_invalid():
@@ -73,9 +74,7 @@ def test_interval_hr_invalid():
     time.sleep(0.500)
     then = datetime.datetime.now()
     time.sleep(0.500)
-    ###EDIT
-    future = str(datetime.datetime.now())
-    #future = datetime.datetime.now()
+    future = time2str(datetime.datetime.now())
     add_heart_rate(email, 78, then)
     message = "Given date is in the future. Please give a reasonable input."
     assert interval_hr(email, future) == message

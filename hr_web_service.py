@@ -1,15 +1,16 @@
-from flask import Flask, jsonify, request
-app = Flask(__name__)
 from database_webserver_functions import add_heart_rate, create_user, \
         print_user, avg_total_hr, interval_hr
 import datetime
 from pymodm import connect
+from flask import Flask, jsonify, request
+app = Flask(__name__)
 connect("mongodb://vcm-3502.vm.duke.edu:27017/heart_rate_app")
 
 
 @app.route("/", methods=["GET"])
 def hello():
-    return "hello, there"
+    return "Hello, there!"
+
 
 @app.route("/api/heart_rate", methods=["POST"])
 def store_heart_rate():
@@ -43,7 +44,7 @@ def store_heart_rate():
 def all_measurements(user_email):
     try:
         info = print_user(user_email)
-        return info
+        return jsonify(info)
     except:
         return "Must give a valid user email!"
 
