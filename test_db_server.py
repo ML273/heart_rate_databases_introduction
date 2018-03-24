@@ -58,7 +58,8 @@ def test_interval_hr():
     time.sleep(0.500)
     then = datetime.datetime.now()
     add_heart_rate(email, 78, then)
-    assert interval_hr(email, now) == 72
+    ###EDIT
+    assert interval_hr(email, str(now)) == 72
 
 
 def test_interval_hr_invalid():
@@ -72,7 +73,9 @@ def test_interval_hr_invalid():
     time.sleep(0.500)
     then = datetime.datetime.now()
     time.sleep(0.500)
-    future = datetime.datetime.now()
+    ###EDIT
+    future = str(datetime.datetime.now())
+    #future = datetime.datetime.now()
     add_heart_rate(email, 78, then)
     message = "Given date is in the future. Please give a reasonable input."
     assert interval_hr(email, future) == message

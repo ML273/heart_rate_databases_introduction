@@ -66,10 +66,7 @@ def interval_avg():
         print("Please provide the correct json format!")
     try:
         isinstance(email, str)
+        isinstance(inter, str)
     except TypeError:
-        print("Please provide a valid email!")
-    try:
-        isinstance(inter, type(datetime.datetime.now()))
-    except TypeError:
-        print("Please provide proper format for time!")
+        print("Please provide a valid email or proper time string!")
     return interval_hr(email, inter)
