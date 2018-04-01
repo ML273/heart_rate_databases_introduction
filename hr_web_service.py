@@ -3,7 +3,10 @@ from database_webserver_functions import add_heart_rate, create_user, \
 import datetime
 from pymodm import connect
 from flask import Flask, jsonify, request
+from flask_cors import import CORS
+
 app = Flask(__name__)
+CORS(app)
 connect("mongodb://vcm-3502.vm.duke.edu:27017/heart_rate_app")
 
 
